@@ -165,3 +165,21 @@ if secili_pet:
         st.info("Henüz kilo verisi yok.")
 else:
     st.info("Lütfen bir hayvan seçin veya yeni hayvan kaydedin.")
+import os
+import pandas as pd
+
+# CSV dosyaları varsa oku, yoksa oluştur
+if not os.path.exists("pet_kayitlari.csv"):
+    df_pets = pd.DataFrame(columns=[
+        "Pet Adı", "Tür", "Irk", "Yaş", "Cinsiyet", "Kısırlaştırma Durumu",
+        "Mevcut Hastalıklar", "Geçirilmiş Hastalıklar", "Geçirilmiş Operasyonlar",
+        "Kullanılan İlaçlar", "Hasta Sahibi", "Telefon"
+    ])
+    df_pets.to_csv("pet_kayitlari.csv", index=False)
+
+if not os.path.exists("kilo_takibi.csv"):
+    df_kilo = pd.DataFrame(columns=[
+        "Pet Adı", "Tarih", "Kilo", "Verilen Mama (g)", "Toplam Enerji (kcal)"
+    ])
+    df_kilo.to_csv("kilo_takibi.csv", index=False)
+
