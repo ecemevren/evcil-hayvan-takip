@@ -20,8 +20,7 @@ if not os.path.exists("kilo_takibi.csv"):
     df = pd.DataFrame(columns=[
         "Pet Adı", "Tarih", "Kilo", "Verilen Mama (g)", "Toplam Enerji (kcal)"
     ])
-    df.to_csv("kilo_ta
-
+df.to_csv("kilo_takibi.csv", index=False)
 import streamlit as st
 import pandas as pd
 import plotly.express as px
