@@ -1,6 +1,21 @@
 import streamlit as st
 import pandas as pd
 import os
+import streamlit as st
+
+def login():
+    st.sidebar.title("Giriş Yap")
+    username = st.sidebar.text_input("Kullanıcı Adı")
+    password = st.sidebar.text_input("Şifre", type="password")
+    if username == "ecem" and password == "1234":
+        return True
+    else:
+        if username or password:
+            st.sidebar.error("Kullanıcı adı veya şifre yanlış!")
+        return False
+
+if not login():
+    st.stop()
 
 st.title("Evcil Hayvan Sağlık Takip Uygulaması")
 
@@ -64,3 +79,34 @@ if submit_button:
 # Varolan kayıtları göster
 st.header("Kayıtlı Evcil Hayvanlar")
 st.dataframe(df_pets)
+def convert_df_to_csv(df):
+    return df.to_csv(index=False).encode('utf-8')
+
+csv = convert_df_to_csv(df_pets)
+
+st.download_button(
+    label="Evcil Hayvan Kayıtlarını CSV olarak indir",
+    data=csv,
+    file_name='pet_kayitlari.csv',
+    mime='text/csv',
+)
+import matplotlib.pyplot as plt
+
+st.header("Kilo Takibi ve Grafik")
+
+if not df_kilo.empty:
+    petler = df_kilo["Pet Adı"].unique()
+    secilen_pet = st.selectbox("Hayvan Seç", petler)
+    pet_kilo = df_kilo[df_kilo["Pet Adı"] == secilen_pet]
+
+    pet_kilo['Tarih'] = pd.to_datetime(pet_kilo['Tarih'])
+    pet_kilo = pet_kilo.sort_values(by='Tarih')
+
+    plt.plot(pet_kilo['Tarih'], pet_kilo['Kilo'], marker='o')
+    plt.title(f"{secilen_pet} - Aylık Kilo Takibi")
+    plt.xlabel("Tarih")
+    plt.ylabel("Kilo (kg)")
+    plt.grid(True)
+    st.pyplot(plt)
+else:
+    st.info("Henüz kilo takibi verisi yok.")
