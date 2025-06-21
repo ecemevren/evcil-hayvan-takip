@@ -7,20 +7,21 @@ Created on Sat Jun 21 18:33:09 2025
 import os
 import pandas as pd
 
-# Boş CSV dosyalarını oluştur (uygulama ilk defa açıldığında)
+# Eğer pet_kayitlari.csv yoksa boş DataFrame oluştur ve kaydet
 if not os.path.exists("pet_kayitlari.csv"):
-    df = pd.DataFrame(columns=[
+    df_pets = pd.DataFrame(columns=[
         "Pet Adı", "Tür", "Irk", "Yaş", "Cinsiyet", "Kısırlaştırma Durumu",
         "Mevcut Hastalıklar", "Geçirilmiş Hastalıklar", "Geçirilmiş Operasyonlar",
         "Kullanılan İlaçlar", "Hasta Sahibi", "Telefon"
     ])
-    df.to_csv("pet_kayitlari.csv", index=False)
+    df_pets.to_csv("pet_kayitlari.csv", index=False)
 
+# Eğer kilo_takibi.csv yoksa boş DataFrame oluştur ve kaydet
 if not os.path.exists("kilo_takibi.csv"):
-    df = pd.DataFrame(columns=[
+    df_kilo = pd.DataFrame(columns=[
         "Pet Adı", "Tarih", "Kilo", "Verilen Mama (g)", "Toplam Enerji (kcal)"
     ])
-df.to_csv("kilo_takibi.csv", index=False)
+    df_kilo.to_csv("kilo_takibi.csv", index=False)
 import streamlit as st
 import pandas as pd
 import plotly.express as px
