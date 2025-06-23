@@ -110,3 +110,44 @@ if not df_kilo.empty:
     st.pyplot(plt)
 else:
     st.info("Henüz kilo takibi verisi yok.")
+st.subheader("Kilo Takibi")
+
+kilo_pet_adi = st.text_input("Evcil Hayvan Adı (Kilo Takibi)")
+kilo_tarihi = st.date_input("Tartım Tarihi")
+kilo_degeri = st.number_input("Kilo (kg)", min_value=0.0, step=0.1)
+kcal_alinan = st.number_input("Günlük Alınan Enerji (kcal)", min_value=0)
+
+if st.button("Kilo Bilgisini Kaydet"):
+    yeni_kilo = pd.DataFrame([{
+        "Pet Adı": kilo_pet_adi,
+        "Tarih": kilo_tarihi,
+        "Kilo": kilo_degeri,
+        "Alınan Enerji (kcal)": kcal_alinan
+    }])
+
+    if os.path.exists("kilo_takibi.csv"):
+        df_kilo = pd.read_csv("kilo_takibi.csv")
+        df_kilo = pd.concat([df_kilo, yeni_kilo], ignore_index=True)
+    else:
+        df_kilo = yeni_kilo
+
+    df_kilo.to_csv("kilo_takibi.csv", index=False)
+    st.success("Kilo bilgisi kaydedildi.")
+import matplotlib.pyplot as plt
+
+st.subheader("Aylık Kilo Grafiği")
+
+if os.path.exists("kilo_takibi.csv"):
+    df_kilo = pd.read_csv("kilo_takibi.csv")
+    secilen_pet = st.selectbox("Grafik için Pet Seç", df_kilo["Pet Adı"].unique())
+    pet_kilo = df_kilo[df_kilo["Pet Adı"] == secilen_pet]
+    pet_kilo["Tarih"] = pd.to_datetime(pet_kilo["Tarih"])
+    pet_kilo = pet_kilo.sort_values("Tarih")
+
+    fig, ax = plt.subplots()
+    ax.plot(pet_kilo["Tarih"], pet_kilo["Kilo"], marker="o")
+    ax.set_title(f"{secilen_pet} - Ağırlık Değişimi")
+    ax.set_xlabel("Tarih")
+    ax.set_ylabel("Kilo (kg)")
+    st.pyplot(fig)
+
